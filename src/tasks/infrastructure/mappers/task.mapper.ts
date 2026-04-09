@@ -1,36 +1,38 @@
+import { Task as PrismaTask } from '@prisma/client';
 import { Task } from '../../domain/entities/task.entity';
-import { TaskOrmEntity } from '../entities/task.orm-entity';
+import { TaskPriority } from '../../domain/enums/task-priority.enum';
+import { TaskStatus } from '../../domain/enums/task-status.enum';
 
 export class TaskMapper {
-  static toDomain(orm: TaskOrmEntity): Task {
+  static toDomain(row: PrismaTask): Task {
     return Task.restore({
-      id: orm.id,
-      title: orm.title,
-      description: orm.description ?? undefined,
-      status: orm.status,
-      priority: orm.priority,
-      assigneeId: orm.assigneeId,
-      organizationId: orm.organizationId,
-      dueDate: orm.dueDate,
-      completedAt: orm.completedAt,
-      createdAt: orm.createdAt,
-      updatedAt: orm.updatedAt,
+      id: row.id,
+      title: row.title,
+      description: row.description ?? undefined,
+      status: row.status as unknown as TaskStatus,
+      priority: row.priority as unknown as TaskPriority,
+      assigneeId: row.assigneeId,
+      organizationId: row.organizationId,
+      dueDate: row.dueDate,
+      completedAt: row.completedAt,
+      createdAt: row.createdAt,
+      updatedAt: row.updatedAt,
     });
   }
 
-  static toOrm(task: Task): TaskOrmEntity {
-    const orm = new TaskOrmEntity();
-    orm.id = task.id;
-    orm.title = task.title;
-    orm.description = task.description ?? null;
-    orm.status = task.status;
-    orm.priority = task.priority;
-    orm.assigneeId = task.assigneeId;
-    orm.organizationId = task.organizationId;
-    orm.dueDate = task.dueDate;
-    orm.completedAt = task.completedAt;
-    orm.createdAt = task.createdAt;
-    orm.updatedAt = task.updatedAt;
-    return orm;
+  static toPrisma(task: Task): PrismaTask {
+    return {
+      id: task.id,
+      title: task.title,
+      description: task.description ?? null,
+      status: task.status as unknown as PrismaTask['status'],
+      priority: task.priority as unknown as PrismaTask['priority'],
+      assigneeId: task.assigneeId,
+      organizationId: task.organizationId,
+      dueDate: task.dueDate,
+      completedAt: task.completedAt,
+      createdAt: task.createdAt,
+      updatedAt: task.updatedAt,
+    };
   }
 }

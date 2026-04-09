@@ -1,22 +1,21 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { PrismaModule } from '../prisma/prisma.module';
 import { TASK_REPOSITORY } from './application/repositories/task-repository';
 import { ChangeTaskStatusUseCase } from './application/use-cases/change-task-status.use-case';
 import { CreateTaskUseCase } from './application/use-cases/create-task.use-case';
-import { TaskOrmEntity } from './infrastructure/entities/task.orm-entity';
-import { TypeOrmTaskRepository } from './infrastructure/repositories/typeorm-task.repository';
+import { PrismaTaskRepository } from './infrastructure/repositories/prisma-task.repository';
 import { TasksController } from './presentation/tasks.controller';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([TaskOrmEntity])],
+  imports: [PrismaModule],
   controllers: [TasksController],
   providers: [
     CreateTaskUseCase,
     ChangeTaskStatusUseCase,
-    TypeOrmTaskRepository,
+    PrismaTaskRepository,
     {
       provide: TASK_REPOSITORY,
-      useExisting: TypeOrmTaskRepository,
+      useExisting: PrismaTaskRepository,
     },
   ],
 })

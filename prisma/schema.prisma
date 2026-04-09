@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+model Task {
+  id             String       @id @db.VarChar(36)
+  title          String       @db.VarChar(200)
+  description    String?      @db.Text
+  status         TaskStatus
+  priority       TaskPriority
+  assigneeId     String       @map("assignee_id") @db.VarChar(36)
+  organizationId String       @map("organization_id") @db.VarChar(36)
+  dueDate        DateTime     @map("due_date")
+  completedAt    DateTime?    @map("completed_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@index([status], name: "idx_tasks_status")
+  @@index([assigneeId], name: "idx_tasks_assignee")
+  @@index([organizationId], name: "idx_tasks_organization")
+  @@map("tasks")
+}
