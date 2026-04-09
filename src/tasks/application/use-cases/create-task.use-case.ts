@@ -4,10 +4,8 @@ import { Task } from '../../domain/entities/task.entity';
 import { DueDateMustBeFutureError } from '../../domain/errors/due-date-must-be-future.error';
 import { InvalidTaskTitleError } from '../../domain/errors/invalid-task-title.error';
 import { TaskPriority } from '../../domain/enums/task-priority.enum';
-import {
-  TASK_REPOSITORY,
-  TaskRepository,
-} from '../repositories/task-repository';
+import { TASK_REPOSITORY } from '../repositories/task-repository';
+import type { TaskRepository } from '../repositories/task-repository';
 
 type CreateTaskUseCaseInput = {
   title: string;

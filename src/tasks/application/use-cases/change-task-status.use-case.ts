@@ -4,10 +4,8 @@ import { Task } from '../../domain/entities/task.entity';
 import { InvalidTaskStatusTransitionError } from '../../domain/errors/invalid-task-status-transition.error';
 import { TaskStatus } from '../../domain/enums/task-status.enum';
 import { TaskNotFoundError } from '../errors/task-not-found.error';
-import {
-  TASK_REPOSITORY,
-  TaskRepository,
-} from '../repositories/task-repository';
+import { TASK_REPOSITORY } from '../repositories/task-repository';
+import type { TaskRepository } from '../repositories/task-repository';
 
 type ChangeTaskStatusInput = {
   id: string;

@@ -1,23 +1,22 @@
 import { Module } from '@nestjs/common';
-import {
-  TASK_REPOSITORY,
-  TaskRepository,
-} from './application/repositories/task-repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { TASK_REPOSITORY } from './application/repositories/task-repository';
 import { ChangeTaskStatusUseCase } from './application/use-cases/change-task-status.use-case';
 import { CreateTaskUseCase } from './application/use-cases/create-task.use-case';
-import { InMemoryTaskRepository } from './infrastructure/repositories/in-memory-task.repository';
+import { TaskOrmEntity } from './infrastructure/entities/task.orm-entity';
+import { TypeOrmTaskRepository } from './infrastructure/repositories/typeorm-task.repository';
 import { TasksController } from './presentation/tasks.controller';
 
 @Module({
+  imports: [TypeOrmModule.forFeature([TaskOrmEntity])],
   controllers: [TasksController],
   providers: [
     CreateTaskUseCase,
     ChangeTaskStatusUseCase,
-    InMemoryTaskRepository,
+    TypeOrmTaskRepository,
     {
       provide: TASK_REPOSITORY,
-      useFactory: (repo: InMemoryTaskRepository): TaskRepository => repo,
-      inject: [InMemoryTaskRepository],
+      useExisting: TypeOrmTaskRepository,
     },
   ],
 })
